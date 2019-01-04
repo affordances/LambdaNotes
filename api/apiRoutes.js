@@ -5,13 +5,6 @@ const session = require('express-session');
 const notes = require('./data/helpers/noteHelpers');
 const users = require('./data/helpers/userHelpers');
 
-const noteCheck = (req, res, next) => {
-  if (!req.body.title || !req.body.content) {
-    return res.status(400).json({ message: "All fields must be completed." });
-  }
-  next();
-};
-
 router.put('/ordering', async (req, res) => { // updates a user's noteOrdering
   try {
     const updatedNoteOrdering = await users.updateNoteOrdering(1, req.body);
@@ -55,7 +48,7 @@ router.get('/notes/:id', async (req, res) => {
   }
 });
 
-router.post('/notes', noteCheck, async (req, res) => {
+router.post('/notes', async (req, res) => {
   try {
     const newNote = await notes.insert(req.body);
     const noteOrderingString = await users.getNoteOrdering(1);
@@ -69,7 +62,7 @@ router.post('/notes', noteCheck, async (req, res) => {
   }
 });
 
-router.put('/notes/:id', noteCheck, async (req, res) => {
+router.put('/notes/:id', async (req, res) => {
   try {
     const editedNote = await notes.update(req.params.id, req.body);
     if (editedNote === 0) {

@@ -41,7 +41,9 @@ class Note extends React.Component {
   // sends edited note to server, turns off edit mode, resets state with contents of new note
   handleEditSubmit = e => {
     e.preventDefault();
-    this.props.editNote({ id: this.id, title: this.state.title, content: this.state.content });
+    const { title, content } = this.state;
+    if (title === "" || content === "") { return; }
+    this.props.editNote({ id: this.id, title, content });
     this.setState({ isEditing: false,
                     title: this.props.note.title,
                     content: this.props.note.content });
@@ -66,6 +68,7 @@ class Note extends React.Component {
   }
 
   render() {
+    const { isEditing, title, content, modalIsOpen } = this.state;
     // if note is not yet loaded into store, or if requested id does not exist, return NoMatch
     if (this.props.fetchingNote || this.props.editingNote) {
       return (
@@ -80,21 +83,20 @@ class Note extends React.Component {
     }
 
     // if edit mode is toggled, return edit form
-    if (this.state.isEditing) {
+    if (isEditing) {
       return (
         <NoteForm type={"edit"}
-              title={this.state.title}
-              content={this.state.content}
-              handleFormSubmit={this.handleEditSubmit}
-              handleInputChange={this.handleInputChange}
+          title={title}
+          content={content}
+          handleFormSubmit={this.handleEditSubmit}
+          handleInputChange={this.handleInputChange}
         />
       );
     }
 
     return (
       <div className="main-container note">
-        <Modal isOpen={this.state.modalIsOpen}
-               onAfterOpen={this.afterOpenModal}
+        <Modal isOpen={modalIsOpen}
                onRequestClose={this.closeModal}
                className="modal"
                overlayClassName="overlay"

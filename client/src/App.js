@@ -44,31 +44,34 @@ class App extends Component {
   // sends current state of title and content to server, resets state, redirects to home page
   handleFormSubmit = e => {
     e.preventDefault();
-    this.props.addNote({ title: this.state.title, content: this.state.content });
+    const { title, content } = this.state;
+    if (title === "" || content === "") { return; }
+    this.props.addNote({ title, content });
     this.setState({ title: "", content: "" });
     this.props.history.push("/");
   }
 
   render() {
+    const { searchPhrase, title, content, filteredNotes } = this.state;
     return (
       <div className="container">
-        <Sidebar searchPhrase={this.state.searchPhrase}
-                 handleSearchChange={this.handleSearchChange} />
+        <Sidebar searchPhrase={searchPhrase}
+          handleSearchChange={this.handleSearchChange} />
 
         <Switch>
 
           <Route exact path="/" render={ props =>
-              <NoteList notes={this.state.filteredNotes.length > 0 ? this.state.filteredNotes : this.props.notes}
-              />
-            }
+            <NoteList notes={filteredNotes.length > 0 ? filteredNotes : this.props.notes}
+            />
+          }
           />
 
           <Route path="/notes/add" render={ props =>
-              <NoteForm type={"new"}
-                    title={this.state.title}
-                    content={this.state.content}
-                    handleFormSubmit={this.handleFormSubmit}
-                    handleInputChange={this.handleInputChange}
+            <NoteForm type={"new"}
+              title={title}
+              content={content}
+              handleFormSubmit={this.handleFormSubmit}
+              handleInputChange={this.handleInputChange}
               />
             }
           />

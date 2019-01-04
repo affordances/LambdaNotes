@@ -18,13 +18,14 @@ class NoteList extends React.Component {
   }
 
   onSort = (sortedList) => {
-    const updatedNoteOrdering = JSON.stringify(sortedList.map(note => {
+    const noteOrdering = JSON.stringify(sortedList.map(note => {
       return Number(note._id);
     }));
-    this.props.updateNoteOrdering({ noteOrdering: updatedNoteOrdering });
+    this.props.updateNoteOrdering({ noteOrdering });
   }
 
   render() {
+    const { isSortable } = this.state;
     // reverses note array
     let notes = this.props.notes;
 
@@ -50,7 +51,7 @@ class NoteList extends React.Component {
 
     // creates array of draggable or non-draggable notes, depending on isSortable
     const draggableNotes = notes.map(note => {
-      const jsx = (this.state.isSortable) ?
+      const jsx = (isSortable) ?
         (
           <div className="note-preview-container" key={Math.random()}>
             <h3>{note.title}</h3>
@@ -78,15 +79,15 @@ class NoteList extends React.Component {
       <div className="main-container">
         <div className="note-previews-header-container">
           <h2>Your Notes:</h2>
-            <label>
-              Sort notes
-              <Toggle
-                checked={this.state.isSortable}
-                onChange={this.toggleSortable}
-                icons={false}
-              >
-              </Toggle>
-            </label>
+          <label>
+            Sort notes
+            <Toggle
+              checked={isSortable}
+              onChange={this.toggleSortable}
+              icons={false}
+            >
+            </Toggle>
+          </label>
 
         </div>
           <div className="note-previews-container">
