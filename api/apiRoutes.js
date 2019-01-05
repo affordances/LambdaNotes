@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const notes = require('./data/helpers/noteHelpers');
 const users = require('./data/helpers/userHelpers');
